@@ -1,8 +1,11 @@
-package main.java.bling;
+package bling;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class AbstractCurrency {
 
-    public abstract ArrayList<Integer> getPossibleCoinValues();
+    public abstract ArrayList<Long> getPossibleCoinValues();
+
+    public abstract HashMap<String, Long> getCoinMap();
 }
