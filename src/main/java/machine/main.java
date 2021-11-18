@@ -4,6 +4,7 @@ import bling.AbstractCurrency;
 import bling.ExerciseCurrency;
 import bling.Monnaie;
 import helper.Trampoline;
+import workspace.Fibonacci;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -12,18 +13,45 @@ public class main {
     public static void main(String[] args){
         System.out.println("Running main");
 
-        //We seem to be going through the test OK.
-        //monnaieObjectTest();
-        long heapSize = Runtime.getRuntime().totalMemory();
-        System.out.println("Heap:" + heapSize);
+        fibonacciDepthTest();
 
 
-        getMinimalChangeTest();
+//      getMinimalChangeTest();
 
+        //Two possible approaches: Implement my own stack or
+        //https://stackoverflow.com/questions/5496464/write-a-non-recursive-traversal-of-a-binary-search-tree-using-constant-space-and
 
     }
 
     StringBuilder builder = new StringBuilder();
+
+    public static void fibonacciDepthTest(){
+//        System.out.println("Fib 0 = " + new Fibonacci().getClassical(0).toString());
+//        System.out.println("Fib 1 = " + new Fibonacci().getClassical(1).toString());
+//        System.out.println("Fib 10 = " + new Fibonacci().getClassical(10).toString());
+//        System.out.println("Fib 16 = " + new Fibonacci().getClassical(16).toString());
+//        System.out.println("Fib 160 = " + new Fibonacci().getClassical(160).toString());
+        //System.out.println("Fib 161 = " + new Fibonacci().getClassical(161).toString());
+
+        //We filled standard longs here
+        //System.out.println("Fib 1000 = " + new Fibonacci().getClassical(1000).toString());
+
+        //Overflow begins here
+        //System.out.println("Fib 10000 = " + new Fibonacci().get(10000).toString());
+
+        System.out.println("FibBounce 0 = " + new Fibonacci().getBouncy(0).execute().toString());
+        System.out.println("FibBounce 1 = " + new Fibonacci().getBouncy(1).execute().toString());
+        System.out.println("FibBounce 10 = " + new Fibonacci().getBouncy(10).execute().toString());
+        System.out.println("FibBounce 16 = " + new Fibonacci().getBouncy(16).execute().toString());
+        System.out.println("FibBounce 160 = " + new Fibonacci().getBouncy(160).execute().toString());
+        System.out.println("FibBounce 161 = " + new Fibonacci().getBouncy(161).execute().toString());
+
+        //We filled standard longs here
+        System.out.println("FibBounce 1000 = " + new Fibonacci().getBouncy(1000).execute().toString());
+
+        //Overflow on classical methods starts here
+        System.out.println("FibBounce 10000 = " + new Fibonacci().getBouncy(10000).execute().toString());
+    }
 
     public static void monnaieObjectTest(){
         Monnaie firstMonnaie = new Monnaie(new ExerciseCurrency());
@@ -123,7 +151,6 @@ public class main {
         }
     }
 
-
     static Monnaie minChangeRecurse(AbstractCurrency currency, Long targetAmount, HashMap<Long, Monnaie> answerMap){
 
         //List<Integer> possibleCoinValues = currency.getPossibleCoinValues();
@@ -210,7 +237,8 @@ public class main {
                     // FIXME I have the feeling we should be firing that map earlier.
                     monnaie = monnaie.merge(answerMap.get(s));
                 } else {
-                    monnaie = monnaie.merge(trampolineMinChangeRecurse(currency, s, answerMap));
+                    // FIXME Issue with trampoline here
+                    //monnaie = monnaie.merge(trampolineMinChangeRecurse(currency, s, answerMap));
                 }
 
                 if(monnaie != null && (minMonnaie == null || monnaie.totalCoins() < minMonnaie.totalCoins())){
