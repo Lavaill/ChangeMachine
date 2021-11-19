@@ -1,20 +1,23 @@
 package bling;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class ExerciseCurrency extends AbstractCurrency {
+public class PrimeCurrency extends AbstractCurrency {
 
-    //FIXME Deprecate the currencyList functionality it's not brilliant, let's only do the map.
+    //I use this fictional prime-number only currency to test extreme edge cases. This currency is not convenient.
+
     private ArrayList<Long> currencyList;
 
     private HashMap<Long, String> coinMap;
 
-    public ExerciseCurrency(){
+    public PrimeCurrency(){
         this.coinMap = new HashMap<Long, String>();
-        coinMap.put((long) 2 , "2€");
-        coinMap.put((long) 5 , "5€");
-        coinMap.put((long) 10 , "10€");
+        coinMap.put((long) 3 , "⊗3");
+        coinMap.put((long) 11 , "⊗11");
+        coinMap.put((long) 89 , "⊗89");
+        coinMap.put((long) 97 , "⊗97");
 
         this.currencyList = new ArrayList<>(coinMap.keySet());
     }
@@ -27,3 +30,7 @@ public class ExerciseCurrency extends AbstractCurrency {
     @Override
     public HashMap<Long, String> getCoinMap() { return coinMap; }
 }
+
+
+
+

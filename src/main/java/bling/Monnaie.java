@@ -12,17 +12,15 @@ public class Monnaie {
 
     //Note: For optimisation purposes a few variables could be used to avoid having to calculate the value of
     //the total coins and total amount. This object is currently very utilitarian due to the nature of the exercise.
-
-    private HashMap<String, Long> changeDetails = new HashMap<String, Long>();
+    private HashMap<Long, Long> change = new HashMap<Long, Long>();
     private AbstractCurrency currency;
 
     public Monnaie(AbstractCurrency currency){
         this.currency = currency;
-        HashMap<String, Long> changeDetails = new HashMap<String, Long>();
-        currency.getPossibleCoinValues().stream().forEach(value -> this.changeDetails.put(value.toString(), (long) 0));
+        currency.getPossibleCoinValues().stream().forEach(value -> this.change.put(value, (long) 0));
     }
 
-    //Warning: Working with longs is allowed as long as we do not use cents in our currencies.
+    //Working with longs is allowed as long as we represent cents as full units.
     public Long totalCoins(){
 
         AtomicLong totalCoins = new AtomicLong(0);
@@ -31,7 +29,7 @@ public class Monnaie {
         return totalCoins.get();
     }
 
-    /* FIXME Let's just avoid bigints for now.
+    /* FIXME Let's just avoid bigints for now, it will require too much time to refactor them in.
     //This method's use of BigIntegers is highly inefficient but acts as a safeguard when calculating coin values around the maximum long.
     public BigInteger totalAmount(){
 
@@ -48,8 +46,9 @@ public class Monnaie {
     public Long totalAmount(){
 
         Long totalAmount =  (long) 0;
-        for (Map.Entry<String, Long> change : this.getChangeDetails().entrySet()){
-            totalAmount += change.getValue() * currency.getValueOf(change.getKey());
+
+        for (Map.Entry<Long, Long> change : this.getChangeDetails().entrySet()){
+            totalAmount += change.getValue() * change.getKey();
         }
         return totalAmount;
     }
@@ -67,30 +66,31 @@ public class Monnaie {
             Monnaie resultingMonnaie = new Monnaie(this.currency);
             monnaie.getChangeDetails().entrySet().stream().forEach(entry ->
                     resultingMonnaie.setCoin(entry.getKey(),
-                            changeDetails.get(entry.getKey()) + entry.getValue()));
+                            change.get(entry.getKey()) + entry.getValue()));
             return resultingMonnaie;
         }
     }
 
-    public void setCoin(String coinType, Long coinQuantity){
-        changeDetails.put(coinType, coinQuantity);
+    public void setCoin(Long coinType, Long coinQuantity){
+        change.put(coinType, coinQuantity);
     }
 
-    public HashMap<String, Long> getChangeDetails(){
+    public HashMap<Long, Long> getChangeDetails(){
         //TODO investigate what happened here.
 
-        return changeDetails;
+        return change;
     }
 
     @Override
     public String toString(){
 
         StringBuilder sb = new StringBuilder();
-        changeDetails.entrySet().forEach(entry -> sb
-                .append(entry.getKey())
+        currency.getAscendingCoinValues().stream().forEach(tender -> sb
+                .append(currency.getNameOf(tender))
                 .append(" = ")
-                .append(entry.getValue().toString())
+                .append(change.get(tender))
                 .append("\n"));
+
         return sb.toString();
     }
 }
